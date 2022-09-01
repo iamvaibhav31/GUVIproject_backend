@@ -23,7 +23,7 @@ mongoose.connect(dbconfig.db, {
      }
 )
 
-auth.authenticateToken.unless = unless
+auth.authenticateToken.unless = unless;
 app.use(
      auth.authenticateToken.unless({
           path: [
