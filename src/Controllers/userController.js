@@ -1,13 +1,22 @@
 const bcryptjs = require('bcryptjs');
-
+const validator = require('../Validator/userValidator');
 const userService = require('../Services/userService')
 
 
 exports.register = (req, res, next) => {
-     const { password } = req.body
-     const salt = bcryptjs.genSalt(10)
+
+     validator.registerValidator(req.body, (err) => {
+          if (err) {
+               return next(err)
+          }
+     })
+
+
+     const { password, Comfirm_Password } = req.body
+     const salt = bcryptjs.genSaltSync(10)
 
      req.body.password = bcryptjs.hashSync(password, salt)
+     req.body.Comfirm_Password = bcryptjs.hashSync(Comfirm_Password, salt)
 
      userService.register(req.body, (err, result) => {
           if (err) {
@@ -23,12 +32,17 @@ exports.register = (req, res, next) => {
 
 
 exports.login = (req, res, next) => {
-     const { username, password } = req.body
-     // const salt = bcryptjs.genSalt(10)
 
-     // req.body.password = bcryptjs.hashSync(password, salt)
+     validator.loginValidator(req.body, (err) => {
+          if (err) {
+               return next(err)
+          }
+     })
 
-     userService.login({ username, password }, (err, result) => {
+     const { email, password } = req.body
+     console.log(req.body)
+
+     userService.login({ email, password }, (err, result) => {
           if (err) {
                return next(err)
           }
@@ -40,24 +54,33 @@ exports.login = (req, res, next) => {
      })
 }
 
-exports.login = (req, res, next) => {
-     const { username, password } = req.body
-     // const salt = bcryptjs.genSalt(10)
-
-     // req.body.password = bcryptjs.hashSync(password, salt)
-
-     userService.login({ username, password }, (err, result) => {
-          if (err) {
-               return next(err)
-          }
-
-          return res.status(200).send({
-               success: 'true',
-               data: result
-          })
-     })
-}
 
 exports.userProfile = (req, res, next) => {
-     return res.status(200).json({ message: "Authorized Users" })
+     userService.userprofile({ params: req.params['id'], data: req.user.data }, (err, result) => {
+          if (err) {
+               return next(err)
+          }
+
+          return res.status(200).send({
+               success: 'true',
+               message: "Authorized Users",
+               data: result
+          })
+     })
+}
+
+exports.userProfileUpdate = (req, res, next) => {
+     const data = req.body
+     console.log(data)
+     userService.userprofileupdate({ params: req.params['id'], data }, (err, result) => {
+          if (err) {
+               return next(err)
+          }
+
+          return res.status(200).send({
+               success: 'true',
+               message: "Authorized Users",
+               data: result
+          })
+     })
 }

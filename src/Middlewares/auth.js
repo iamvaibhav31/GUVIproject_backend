@@ -9,15 +9,16 @@ function authenticateToken(req, res, next) {
           if (err) {
                return res.sendStatus(403)
           }
+
           req.user = user;
           next()
      })
 
 }
 
-function generateAccessToken(user) {
-     return jwt.sign({ username: user }, 'access', {
-          expiresIn: '1h'
+function generateAccessToken(emails) {
+     return jwt.sign({ data: emails }, 'access', {
+          expiresIn: 86400
      })
 }
 

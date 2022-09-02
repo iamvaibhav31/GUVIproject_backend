@@ -23,15 +23,15 @@ mongoose.connect(dbconfig.db, {
      }
 )
 
-auth.authenticateToken.unless = unless;
-app.use(
-     auth.authenticateToken.unless({
-          path: [
-               { url: "/users/login", method: ["POST"] },
-               { url: "/users/register", method: ["POST"] },
-          ]
-     })
-)
+// auth.authenticateToken.unless = unless;
+// app.use(
+//      auth.authenticateToken.unless({
+//           path: [
+//                { url: "/users/login", method: ["POST"] },
+//                { url: "/users/register", method: ["POST"] },
+//           ]
+//      })
+// )
 
 app.use(express.json())
 
@@ -42,6 +42,6 @@ app.use(error.errorHandler)
 
 
 app.listen(process.env.port || 4000, function () {
-     console.log("listening ")
+     console.log("......... SERVER STARTED ......... ")
 })
 
